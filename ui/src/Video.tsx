@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
-
-const websocket = new WebSocket("ws://localhost:3000")
+const host = process.env.REACT_APP_WS_ENDPOINT
+const websocket = new WebSocket(""+host)
 
 type OfferOptions = {
   offerToReceiveAudio: boolean
@@ -23,7 +23,11 @@ const Video = () => {
 
   useEffect(() => {
     if(!peerConnection) {
-      const pc = new RTCPeerConnection()
+      const pc = new RTCPeerConnection({iceServers: [
+        {"urls": "stun:stun.l.google.com:19302"},
+        {"urls": "stun:stun1.l.google.com:19302"},
+        {"urls": "stun:stun2.l.google.com:19302"}
+      ]})
       pc.onicecandidate = (e) => {
         console.log('icecandidate event involked')
         console.log(e)
